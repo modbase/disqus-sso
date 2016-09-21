@@ -30,7 +30,6 @@ class DisqusTest extends PHPUnit_Framework_TestCase
         'avatar' => 'https://api.adorable.io/avatars/285/abott@adorable.png',
         'url' => 'http://google.com'
     ];
-    protected $expectedPayload = 'eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0IiwiZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwiYXZhdGFyIjoiaHR0cHM6XC9cL2FwaS5hZG9yYWJsZS5pb1wvYXZhdGFyc1wvMjg1XC9hYm90dEBhZG9yYWJsZS5wbmciLCJ1cmwiOiJodHRwOlwvXC9nb29nbGUuY29tIn0= c8187eeb2e33b33c69672e4a4e3d47f525bbe044 1451606400';
 
     /**
      * Test to see if the payload is
@@ -40,10 +39,12 @@ class DisqusTest extends PHPUnit_Framework_TestCase
      */
     public function testAllUserdata()
     {
+        $expectedPayload = 'eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0IiwiZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwiYXZhdGFyIjoiaHR0cHM6XC9cL2FwaS5hZG9yYWJsZS5pb1wvYXZhdGFyc1wvMjg1XC9hYm90dEBhZG9yYWJsZS5wbmciLCJ1cmwiOiJodHRwOlwvXC9nb29nbGUuY29tIn0= c8187eeb2e33b33c69672e4a4e3d47f525bbe044 1451606400';
+
         $disqus = new Disqus($this->publicKey, $this->privateKey);
         $payload = $disqus->payload($this->userData);
 
-        $this->assertEquals($this->expectedPayload, $payload);
+        $this->assertEquals($expectedPayload, $payload);
     }
 
     /**
@@ -54,13 +55,15 @@ class DisqusTest extends PHPUnit_Framework_TestCase
      */
     public function testMissingUserdata()
     {
+        $expectedPayload = 'eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0IiwiZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwidXJsIjoiaHR0cDpcL1wvZ29vZ2xlLmNvbSJ9 7b742d7d3065a7c4c74eac204bff1dc40f549fbb 1451606400';
+
         $disqus = new Disqus($this->publicKey, $this->privateKey);
 
         $userData = $this->userData;
         unset($userData['avatar']);
 
-        $payload = $disqus->payload($this->userData);
+        $payload = $disqus->payload($userData);
 
-        $this->assertEquals($this->expectedPayload, $payload);
+        $this->assertEquals($expectedPayload, $payload);
     }
 }
