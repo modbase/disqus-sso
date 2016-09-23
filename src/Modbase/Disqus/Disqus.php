@@ -1,15 +1,16 @@
-<?php namespace Modbase\Disqus;
+<?php
 
-use Illuminate\Support\Facades\Config;
+namespace Modbase\Disqus;
 
 /**
  * Basic helper class to be used for SSO authentication with Disqus.
  */
-class Disqus {
+class Disqus
+{
 
     /**
      * Secret Disqus API key
-     * 
+     *
      * @var string
      */
     protected $privateKey;
@@ -17,19 +18,19 @@ class Disqus {
 
     /**
      * Public Disqus API key
-     * 
+     *
      * @var string
      */
     protected $publicKey;
 
 
     /**
-     * Creates a new Disqus instance                      
+     * Creates a new Disqus instance
      */
-    public function __construct()
+    public function __construct($publicKey, $privateKey)
     {
-        $this->privateKey = Config::get('disqus-sso::key.private');
-        $this->publicKey = Config::get('disqus-sso::key.public');
+        $this->privateKey = $privateKey;
+        $this->publicKey = $publicKey;
     }
 
 
@@ -37,14 +38,13 @@ class Disqus {
      * The final payload that must be sent to Disqus in order to associate the user.
      * Example usage: this.page.remote_auth_s3 = "<?php echo DisqusAuth::payload(); ?>";
      *
-     * @param  string $userData The user data to authenticate with. Only 'id', 'username' and 'email' are used.
-     * 
+     * @param  mixed $userData The user data to authenticate with. Only 'id', 'username' and 'email' are used.
+     *
      * @return string
      */
     public function payload($userData)
     {
-        if ( ! is_array($userData) )
-        {
+        if (!is_array($userData)) {
             $userData = $userData->toArray();
         }
 
@@ -62,7 +62,7 @@ class Disqus {
     /**
      * The public API key.
      * Example usage: this.page.api_key = "<?php echo DisqusAuth::publicKey(); ?>";
-     * 
+     *
      * @return string
      */
     public function publicKey()
@@ -73,7 +73,7 @@ class Disqus {
 
     /**
      * Base64 encoded string of the JSON encoded user data.
-     * 
+     *
      * @param  string $userData The data to encode
      * @return string
      */
@@ -85,7 +85,7 @@ class Disqus {
 
     /**
      * Disqus specific encrypted hash of <encoded user data> <timestamp>.
-     * 
+     *
      * @param  string $encodedData The encoded user data
      * @param  integer $timestamp Unix timestamp
      * @return string
@@ -93,7 +93,7 @@ class Disqus {
     protected function getHMAC($encodedData, $timestamp)
     {
         $message = $encodedData . ' ' . $timestamp;
-        
+
         return hash_hmac('sha1', $message, $this->privateKey);
     }
 }
